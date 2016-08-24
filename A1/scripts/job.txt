@@ -1,0 +1,44 @@
+#!/bin/bash
+# DO NOT USE environment = COPY_ALL
+#@ job_type = MPICH
+#@ class = test
+#@ node = 1
+#@ total_tasks = 16
+#@ island_count = 1
+#@ wall_clock_limit = 00:20:00
+#@ job_name = test
+#@ network.MPI = sn_all,not_shared,us
+#@ initialdir = $(home)/A1/code
+#@ output = job$(jobid).out
+#@ error = job$(jobid).err
+#@ notification=always
+#@ notify_user=kunal.mody@tum.de
+#@ queue
+. /etc/profile
+. /etc/profile.d/modules.sh
+#setup of environment
+module unload mpi.ibm
+module load mpi.intel
+module load papi
+perf_off
+
+## Text Input
+## 3 tests with tjunc.dat
+mpiexec -n 1 ./gccg text tjunc.dat t_tjunc_01
+mv summary.out summary_t_tjunc_01.out
+
+mpiexec -n 1 ./gccg text tjunc.dat t_tjunc_02
+mv summary.out summary_t_tjunc_02.out
+
+mpiexec -n 1 ./gccg text tjunc.dat t_tjunc_03
+mv summary.out summary_t_tjunc_03.out
+
+## 3 tests with cojack.dat
+mpiexec -n 1 ./gccg text cojack.dat t_cojack_01
+mv summary.out summary_t_cojack_01.out
+
+mpiexec -n 1 ./gccg text cojack.dat t_cojack_02
+mv summary.out summary_t_cojack_02.out
+
+mpiexec -n 1 ./gccg text cojack.dat t_cojack_03
+mv summary.out summary_t_cojack_03.out
